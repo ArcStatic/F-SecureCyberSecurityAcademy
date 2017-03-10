@@ -23,6 +23,6 @@ Course Project 1 asked us to create a vulnerable web application containing at l
  * __Solution:__ Enable _csrf tokens as mentioned in vulnerability A5 and create a login system which allows a user to change only their own information if they've signed in successfully. This login should expire after a set time has elapsed (eg. automatically sign a user out after 2 hours of inactivity).
 
 
-* __[UNSUCCESSFUL] A1: Injection:__ Attempted to allow SQL queries to be executed using input from the 'name' variable in the url for `/loginpage`. See the 'Persistence' branch of this project for the attempted implementation - haven't been able to fix the error 'Unrecognised persistence.xml version []' despite changing persistence versions to 1.0, 2.0 and 2.1.
+* __[UNSUCCESSFUL] A1: Injection:__ Attempted to allow SQL queries to be executed using input from the 'name' variable in the url for `/loginpage`. See the 'Persistence' branch of this project for the attempted implementation - haven't been able to fix the error `Unrecognised persistence.xml version []` despite changing persistence versions to 1.0, 2.0 and 2.1.
  * __Solution:__ The current implementation already fixes this by using `signupRepository.findByName(userName);`, which does not allow the native execution of SQL queries. An input of `name=' OR '1'='1` currently searches for a user with the exact name "' OR '1'='1" rather than executing a query with an OR statement 
  
