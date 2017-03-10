@@ -7,6 +7,7 @@ import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +20,7 @@ public class SignupController {
     @Autowired
     private SignupRepository signupRepository;
 
-    @RequestMapping("*")
+    @RequestMapping("/")
     public String defaultMapping() {
         return "redirect:/form";
     }
@@ -30,11 +31,18 @@ public class SignupController {
     }
 
     @RequestMapping(value = "/form", method = RequestMethod.POST)
-    public String submitForm(@RequestParam String name, @RequestParam String address, @RequestParam String dateOfBirth, @RequestParam String password) {
-        //Flaw #2:
-        
+    public String submitForm(Model model, @RequestParam String name, @RequestParam String address, @RequestParam String dateOfBirth, @RequestParam String password) {
+        //Flaw #2: personal details and password are all sent through POST as plaintext
+        //OWASP A6: Sensitive data exposure
         signupRepository.save(new Signup(name, address, dateOfBirth, password));
-        return "done";
+        model.addAttribute("userName", name);
+        model.addAttribute("userAddress", address);
+        model.addAttribute("userDateOfBirth", dateOfBirth);
+        model.addAttribute("userPassword", password);
+        //Flaw #2: personal details and password are all sent through POST as plaintext
+        //OWASP A6: Sensitive data exposure
+        String loginurl = "redirect:/loginpage?name=" + name;
+        return loginurl;
     }
 
 }
